@@ -852,7 +852,7 @@
     },
     contact: {
       title: 'Contact & Studio Address',
-      html: `<p><strong>Darpan Photo Lab &amp; Custom Framing Studio</strong><br>Station Road, Post Office Chowk, Gopalganj, Bihar – 841428<br>WhatsApp / Support: +91 94310 00000 · support@darpanframes.in</p>`
+      html: `<p><strong>Darpan Color Lab</strong><br>Jangaliya More, Main Road, Gopalganj, Bihar – 841428<br>WhatsApp / Support: +91 94310 00000 · support@darpanframes.in</p>`
     }
   };
 

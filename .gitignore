@@ -2,3 +2,5 @@
 .vercel/
 uploads/
 orders.json
+
+package.json
