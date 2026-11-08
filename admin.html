@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio Dispatch &amp; Print Queue | Darpan Framing Studio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background:#f3ede2; min-height:100vh; padding:2rem 0;">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+      <div>
+        <h1 style="font-size:1.5rem;">🔒 Darpan Studio Print &amp; Dispatch Admin</h1>
+        <p style="font-size:0.85rem; color:#57524e;">Download customer high-res uploaded photos and export Shiprocket / Delhivery One CSV manifests.</p>
+      </div>
+      <a href="/" class="btn-secondary btn-sm">← Back to Storefront</a>
+    </div>
+
+    <!-- PIN Auth Box -->
+    <div id="adminLoginBox" class="control-block" style="max-width:440px; margin:2rem auto;">
+      <h2 style="font-size:1.1rem; margin-bottom:0.5rem;">Enter Studio Admin PIN</h2>
+      <p style="font-size:0.82rem; color:#57524e; margin-bottom:1rem;">Protected access for Gopalganj studio staff (Default PIN: <code>841428</code>).</p>
+      <form id="adminPinForm" style="display:flex; gap:0.5rem;">
+        <label for="adminPinInput" class="sr-only">Studio Admin PIN</label>
+        <input type="password" id="adminPinInput" value="841428" placeholder="Enter PIN" required style="flex:1; padding:0.6rem; border-radius:8px; border:1px solid #cbd5e1;">
+        <button type="submit" class="btn-primary btn-sm">Unlock Queue</button>
+      </form>
+      <p id="adminAuthError" style="color:#d93025; font-size:0.8rem; margin-top:0.5rem;" hidden>Invalid PIN. Please try again.</p>
+    </div>
+
+    <!-- Protected Dashboard -->
+    <div id="adminDashboard" hidden>
+      <div class="admin-kpi-bar">
+        <div class="admin-kpi">
+          <span>Confirmed Orders</span>
+          <strong id="kpiTotalOrders">0 / 50 PoC</strong>
+        </div>
+        <div class="admin-kpi">
+          <span>Gross Revenue</span>
+          <strong id="kpiTotalRevenue">₹0</strong>
+        </div>
+        <div class="admin-kpi">
+          <span>Amount Collected Online</span>
+          <strong id="kpiCollectedNow">₹0</strong>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" class="btn-primary btn-sm" id="exportCsvBtn">⬇️ Export Shiprocket CSV</button>
+          <button type="button" class="btn-ghost btn-sm" id="refreshOrdersBtn">↻ Refresh</button>
+        </div>
+      </div>
+
+      <div id="adminTableContainer" class="table-responsive-wrap"></div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      let currentPin = '';
+      let currentOrders = [];
+
+      const loginBox = document.getElementById('adminLoginBox');
+      const dashboard = document.getElementById('adminDashboard');
+      const authError = document.getElementById('adminAuthError');
+      const tableWrap = document.getElementById('adminTableContainer');
+
+      async function fetchOrders(pin) {
+        try {
+          const res = await fetch('/api/orders', {
+            headers: { 'x-admin-pin': pin }
+          });
+          if (!res.ok) throw new Error('Unauthorized');
+          const data = await res.json();
+          currentPin = pin;
+          currentOrders = data.orders || [];
+          loginBox.hidden = true;
+          dashboard.hidden = false;
+          renderOrders();
+        } catch (_) {
+          // Fallback to localStorage if viewing static file
+          const localRaw = localStorage.getItem('darpan_studio_orders_v2');
+          if (pin === '841428' && localRaw) {
+            currentOrders = JSON.parse(localRaw);
+            loginBox.hidden = true;
+            dashboard.hidden = false;
+            renderOrders();
+            return;
+          }
+          authError.hidden = false;
+        }
+      }
+
+      function renderOrders() {
+        document.getElementById('kpiTotalOrders').textContent = `${currentOrders.length} / 50 PoC`;
+        const gross = currentOrders.reduce((s, o) => s + (o.grandTotal || 0), 0);
+        const collected = currentOrders.reduce((s, o) => s + (o.payNow || 0), 0);
+        document.getElementById('kpiTotalRevenue').textContent = `₹${gross.toLocaleString('en-IN')}`;
+        document.getElementById('kpiCollectedNow').textContent = `₹${collected.toLocaleString('en-IN')}`;
+
+        if (currentOrders.length === 0) {
+          tableWrap.innerHTML = `<div style="padding:2rem; text-align:center; color:#57524e;">No confirmed orders yet. Place a test order on the storefront to see customer print files and shipping labels here.</div>`;
+          return;
+        }
+
+        tableWrap.innerHTML = `
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Order &amp; Payment ID</th>
+                <th>Customer &amp; Address</th>
+                <th>Items &amp; Print Files</th>
+                <th>Box &amp; Courier Slab</th>
+                <th>Payment Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${currentOrders.map((o) => `
+                <tr>
+                  <td>
+                    <strong>${o.orderId}</strong><br>
+                    <small>${o.createdAt}</small><br>
+                    <code style="font-size:0.72rem; color:#15803d;">${o.paymentId || 'PAID'}</code>
+                  </td>
+                  <td>
+                    <strong>${o.customer.name}</strong><br>
+                    <small>📱 ${o.customer.phone}${o.customer.email ? ' • ' + o.customer.email : ''}</small><br>
+                    <small>${o.customer.address}, ${o.customer.city}, ${o.customer.state} - <strong>${o.customer.pincode}</strong></small>
+                  </td>
+                  <td>
+                    ${(o.items || []).map((item) => `
+                      <div style="margin-bottom:0.45rem;">
+                        <strong>${item.qty}× ${item.title}</strong> (${item.mouldingName}, ${item.mountStyle})<br>
+                        <small>Photos (${item.dpi} DPI): ${(item.uploadedPhotos || []).map((p, idx) =>
+                          `<a href="${p.url}" download="${p.name || 'print.jpg'}" target="_blank" style="color:#8e5f1b; font-weight:700; margin-right:6px;">[⬇️ Photo #${idx + 1}]</a>`
+                        ).join('')}</small>
+                      </div>
+                    `).join('')}
+                  </td>
+                  <td>
+                    <strong>${o.boxDimension}</strong><br>
+                    <small>Slab: ${o.chargeableKg} kg • ${o.recommendedCourier}</small>
+                  </td>
+                  <td>
+                    <strong>₹${o.grandTotal.toLocaleString('en-IN')}</strong><br>
+                    <small style="color:#15803d; font-weight:700;">Paid Online: ₹${o.payNow}</small>
+                    ${o.payOnDelivery > 0 ? `<br><small style="color:#b45309; font-weight:700;">Collect COD: ₹${o.payOnDelivery}</small>` : ''}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      document.getElementById('adminPinForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        authError.hidden = true;
+        fetchOrders(document.getElementById('adminPinInput').value.trim());
+      });
+
+      document.getElementById('refreshOrdersBtn').addEventListener('click', () => {
+        if (currentPin) fetchOrders(currentPin);
+      });
+
+      document.getElementById('exportCsvBtn').addEventListener('click', () => {
+        if (!currentOrders.length) return;
+        const headers = ['Order ID','Date','Payment ID','Customer Name','Phone','Address','City','State','Pincode','Payment Mode','Order Total','COD Collectable','Box Size','Weight Slab (kg)','Photo URLs'];
+        const rows = currentOrders.map((o) => {
+          const urls = (o.items || []).flatMap((i) => (i.uploadedPhotos || []).map((p) => p.url)).join(' | ');
+          return [
+            o.orderId,
+            `"${o.createdAt}"`,
+            o.paymentId,
+            `"${(o.customer.name || '').replace(/"/g, '""')}"`,
+            o.customer.phone,
+            `"${(o.customer.address || '').replace(/"/g, '""')}"`,
+            `"${o.customer.city}"`,
+            `"${o.customer.state}"`,
+            o.customer.pincode,
+            o.paymentMode === 'prepaid' ? 'Prepaid' : 'COD',
+            o.grandTotal,
+            o.payOnDelivery,
+            o.boxDimension,
+            o.chargeableKg,
+            `"${urls}"`
+          ].join(',');
+        });
+        const blob = new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Darpan_Shiprocket_Manifest_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+      });
+    })();
+  </script>
+</body>
+</html>

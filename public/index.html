@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DARPAN — Custom Photo Frames &amp; Gallery Walls</title>
+<meta name="description" content="Upload your photos, pick a frame, and hang in minutes. Lab-developed prints with shatterproof clear acrylic.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/v2/styles.css">
+</head>
+<body>
+<header class="topbar">
+<div class="topbar-inner">
+<a href="/v2" class="logo" aria-label="Darpan Home">
+<span class="logo-dot" aria-hidden="true"></span>
+<span class="logo-word">DARPAN</span>
+<span class="logo-tag">STUDIO</span>
+</a>
+<div class="topbar-pill">
+<span>Free Delivery ₹999+</span>
+<span class="sep" aria-hidden="true">·</span>
+<span>₹100 OFF Prepaid</span>
+<span class="sep" aria-hidden="true">·</span>
+<span>24-Hr Damage Replacement</span>
+</div>
+<div class="topbar-actions">
+<a href="#happy-customers" class="version-switch">Walls Built</a>
+<a href="/" class="version-switch" title="Switch to Classic Storefront (v1)">Classic v1</a>
+<button type="button" class="cart-trigger" id="openCartBtn" aria-label="Open bag">
+<span>Bag</span>
+<span class="cart-badge" id="cartCountBadge">0</span>
+</button>
+</div>
+</div>
+</header>
+<main class="studio-shell">
+<section class="canvas-pane" id="roomStage" data-wall="alabaster" aria-label="Live Frame Preview">
+<div class="canvas-hud-top">
+<div class="hud-pill" role="radiogroup" aria-label="Wall tone">
+<button type="button" role="radio" aria-checked="true" class="wall-dot active" data-wall-color="alabaster" title="Gallery Alabaster" aria-label="Gallery Alabaster"></button>
+<button type="button" role="radio" aria-checked="false" class="wall-dot" data-wall-color="stone" title="Warm Stone" aria-label="Warm Stone"></button>
+<button type="button" role="radio" aria-checked="false" class="wall-dot" data-wall-color="sage" title="Muted Sage" aria-label="Muted Sage"></button>
+<button type="button" role="radio" aria-checked="false" class="wall-dot" data-wall-color="obsidian" title="Obsidian Wall" aria-label="Obsidian Wall"></button>
+</div>
+<div class="hud-pill dpi-pill" id="dpiIndicator" role="status" aria-live="polite">
+<span class="status-dot good" id="dpiDot"></span>
+<span id="dpiText">285 DPI · Print Ready</span>
+</div>
+</div>
+<div class="canvas-center">
+<div class="gallery-wall" id="galleryWallStage" data-pack-layout="trio" data-size-scale="8x12">
+<div class="frame-node moulding-black mount-museum orient-portrait selected-slot" data-frame-slot="0">
+<div class="frame-mat">
+<div class="frame-sheen" aria-hidden="true"></div>
+<div class="frame-viewport">
+<img
+src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1000&amp;q=85"
+alt="Frame 1 preview"
+fetchpriority="high"
+width="240"
+height="320"
+>
+</div>
+</div>
+</div>
+</div>
+<div class="scale-bench" aria-hidden="true">
+<div class="scale-line">
+<span>5 ft Sofa Scale Reference</span>
+</div>
+</div>
+</div>
+<div class="canvas-hud-bottom">
+<span id="stageSpecSummary">3 × (8" × 12") · Matte Black · Shatterproof Acrylic</span>
+<div class="sample-pills">
+<span>Samples:</span>
+<button type="button" class="sample-chip active" data-sample="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" data-w="2400" data-h="3200">Wedding</button>
+<button type="button" class="sample-chip" data-sample="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" data-w="2600" data-h="1800">Family</button>
+<button type="button" class="sample-chip" data-sample="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" data-w="2000" data-h="2500">Portrait</button>
+</div>
+</div>
+</section>
+<aside class="inspector-pane" aria-label="Frame Customization Controls">
+<div class="inspector-scroll">
+<div class="inspector-header">
+<h1>Custom Lab Frame</h1>
+<p>Real darkroom photo paper · 2mm optical acrylic · No-nail wall strips included.</p>
+</div>
+<div class="cfg-section cfg-section-upload">
+<div class="cfg-label-row">
+<span class="cfg-title">1. Your Photos</span>
+<span class="cfg-hint" id="slotCounterHint">Tap any slot or upload multiple</span>
+</div>
+<input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" multiple class="sr-only">
+<label for="photoFileInput" class="sleek-upload-bar" id="uploadDropzone">
+<span class="up-left">
+<span class="up-icon" aria-hidden="true">↑</span>
+<span id="uploadFileName">Upload Photo(s) from Gallery</span>
+</span>
+<span class="up-badge">JPG / PNG</span>
+</label>
+<div class="photo-dock" id="photoDock">
+</div>
+</div>
+<div class="cfg-section">
+<div class="cfg-label-row">
+<span class="cfg-title">2. Pack</span>
+<span class="cfg-hint" id="packSavingHint">Save ₹698 + Free Shipping</span>
+</div>
+<div class="segmented-grid" role="radiogroup" aria-label="Pack Type">
+<button type="button" role="radio" aria-checked="false" class="seg-btn" data-pack="single" data-slots="1">
+<strong>Single</strong>
+<small>1 Frame</small>
+</button>
+<button type="button" role="radio" aria-checked="true" class="seg-btn active" data-pack="trio" data-slots="3">
+<strong>Set of 3</strong>
+<small>Save 33%</small>
+</button>
+<button type="button" role="radio" aria-checked="false" class="seg-btn" data-pack="gallery6" data-slots="6">
+<strong>Set of 6</strong>
+<small>Save 45%</small>
+</button>
+<button type="button" role="radio" aria-checked="false" class="seg-btn" data-pack="restoration" data-slots="1">
+<strong>Restore</strong>
+<small>Repair + Frame</small>
+</button>
+</div>
+</div>
+<div class="cfg-section">
+<div class="cfg-label-row">
+<span class="cfg-title">3. Size</span>
+<span class="cfg-hint" id="mountTypeHint">Tabletop &amp; Wall Dual Mount</span>
+</div>
+<div class="size-tiles" role="radiogroup" aria-label="Frame Size">
+<button type="button" role="radio" aria-checked="false" class="size-tile" data-size="6x8" data-single-price="499" data-trio-price="1099" data-gallery6-price="1399" data-w-in="6" data-h-in="8" data-mount="Tabletop &amp; Wall Stand">
+<span class="st-dim">6" × 8"</span>
+<span class="st-sub">Compact · ₹499</span>
+</button>
+<button type="button" role="radio" aria-checked="true" class="size-tile active" data-size="8x12" data-single-price="699" data-trio-price="1399" data-gallery6-price="1699" data-w-in="8" data-h-in="12" data-mount="Tabletop &amp; Wall Dual Mount">
+<span class="st-dim">8" × 12"</span>
+<span class="st-sub">A4 Popular · ₹699</span>
+</button>
+<button type="button" role="radio" aria-checked="false" class="size-tile" data-size="12x18" data-single-price="1199" data-trio-price="2499" data-gallery6-price="3699" data-w-in="12" data-h-in="18" data-mount="Wall Hanger">
+<span class="st-dim">12" × 18"</span>
+<span class="st-sub">Large · ₹1,199</span>
+</button>
+<button type="button" role="radio" aria-checked="false" class="size-tile" data-size="16x24" data-single-price="1899" data-trio-price="3999" data-gallery6-price="5999" data-w-in="16" data-h-in="24" data-mount="Steel Wall Mount">
+<span class="st-dim">16" × 24"</span>
+<span class="st-sub">Statement · ₹1,899</span>
+</button>
+</div>
+</div>
+<div class="cfg-section">
+<div class="cfg-label-row">
+<span class="cfg-title">4. Frame &amp; Mat</span>
+<span class="cfg-hint" id="selectedMouldingLabel">Matte Black</span>
+</div>
+<div class="swatch-strip" role="radiogroup" aria-label="Frame Color">
+<button type="button" role="radio" aria-checked="true" class="color-circle active" data-moulding="black" data-moulding-name="Matte Black" data-moulding-price="0">
+<span class="c-ring ring-black"></span>
+<span class="c-name">Black</span>
+</button>
+<button type="button" role="radio" aria-checked="false" class="color-circle" data-moulding="white" data-moulding-name="Gallery White" data-moulding-price="0">
+<span class="c-ring ring-white"></span>
+<span class="c-name">White</span>
+</button>
+<button type="button" role="radio" aria-checked="false" class="color-circle" data-moulding="teak" data-moulding-name="Warm Teak" data-moulding-price="50">
+<span class="c-ring ring-teak"></span>
+<span class="c-name">Teak +₹50</span>
+</button>
+<button type="button" role="radio" aria-checked="false" class="color-circle" data-moulding="walnut" data-moulding-name="Dark Walnut" data-moulding-price="50">
+<span class="c-ring ring-walnut"></span>
+<span class="c-name">Walnut +₹50</span>
+</button>
+<button type="button" role="radio" aria-checked="false" class="color-circle" data-moulding="gold" data-moulding-name="Royal Gold" data-moulding-price="120">
+<span class="c-ring ring-gold"></span>
+<span class="c-name">Gold +₹120</span>
+</button>
+</div>
+<div class="quick-toggles-grid">
+<div class="mini-pill-group" role="radiogroup" aria-label="Mat Border">
+<button type="button" role="radio" aria-checked="true" class="mini-pill active" data-mount-style="museum" data-mount-price="0">White Mat</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-mount-style="fullbleed" data-mount-price="0">Full Bleed</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-mount-style="ivory" data-mount-price="49">Ivory +₹49</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-mount-style="polaroid" data-mount-price="49">Caption +₹49</button>
+</div>
+<div class="mini-pill-group" role="radiogroup" aria-label="Orientation">
+<button type="button" role="radio" aria-checked="true" class="mini-pill active" data-orient="portrait" title="Portrait">▯ Portrait</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-orient="landscape" title="Landscape">▭ Landscape</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-orient="square" title="Square">□ Square</button>
+</div>
+</div>
+<div class="caption-inline-box" id="customCaptionControls" hidden>
+<label for="captionTitleInput" class="sr-only">Caption text</label>
+<input type="text" id="captionTitleInput" maxlength="45" value="Forever &amp; Always · 12.11.2026" placeholder="Enter custom caption or date...">
+</div>
+</div>
+<details class="fine-tune-drawer">
+<summary>Fine-tune crop, filter &amp; paper finish</summary>
+<div class="fine-tune-body">
+<div class="ft-row">
+<span>Tone</span>
+<div class="mini-pill-group" role="radiogroup" aria-label="Filter">
+<button type="button" role="radio" aria-checked="true" class="mini-pill active" data-filter="none">Natural</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-filter="bw">B&amp;W</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-filter="vintage">Warm</button>
+</div>
+</div>
+<div class="ft-row">
+<span>Paper</span>
+<div class="mini-pill-group" role="radiogroup" aria-label="Paper Finish">
+<button type="button" role="radio" aria-checked="true" class="mini-pill active" data-finish="Anti-Glare Matte Lustre">Matte Lustre</button>
+<button type="button" role="radio" aria-checked="false" class="mini-pill" data-finish="High Gloss">High Gloss</button>
+</div>
+</div>
+<div class="ft-row">
+<label for="zoomRange">Zoom (<span id="zoomVal">100%</span>)</label>
+<input type="range" id="zoomRange" min="100" max="180" value="100" step="2">
+<button type="button" class="reset-link" id="resetCropBtn">Reset</button>
+</div>
+</div>
+</details>
+</div>
+<div class="purchase-dock">
+<div class="dock-main-row">
+<div class="dock-price-block">
+<div class="dock-price-line">
+<strong class="dock-price" id="liveTotalPrice">₹1,399</strong>
+<s class="dock-compare" id="liveComparePrice">₹2,097</s>
+<span class="dock-save" id="liveSavingsBadge">Save ₹698</span>
+</div>
+<span class="dock-sub" id="liveShippingNote">Free Delivery · Extra ₹100 off on Prepaid</span>
+</div>
+<div class="dock-cta-group">
+<button type="button" class="btn-buy" id="addToCartBtn">Add to Bag</button>
+<button type="button" class="btn-wa-icon" id="orderOnWhatsAppBtn" title="Order or request wall preview on WhatsApp" aria-label="Order on WhatsApp">
+💬
+</button>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<section id="happy-customers" class="customer-walls-section" aria-label="Walls Our Customers Built">
+<div class="walls-section-bar">
+<div>
+<span class="walls-eyebrow">HAPPY CUSTOMERS</span>
+<h2>Walls Our Customers Built</h2>
+</div>
+<div class="walls-bar-actions">
+<button type="button" class="view-mode-btn active" id="viewRibbonModeBtn">∞ Continuous Ribbon</button>
+<button type="button" class="view-mode-btn" id="viewGridModeBtn">⊞ View All Wall Setups (6)</button>
+</div>
+</div>
+<div class="ribbon-viewport" id="customerRibbonViewport">
+<div class="ribbon-track" id="customerRibbonTrack">
+<button type="button" class="customer-wall-shot" data-preset-pack="gallery6" data-preset-size="8x12" data-preset-moulding="black" data-wall-tag="Set of 6 · 8×12&quot; Matte Black">
+<img src="/v2/walls/indian-living-sofa-6-black.jpg" alt="Indian living room baithak wall above wooden sofa with 6 Matte Black family photo frames" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 6 · 8×12" Matte Black</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="trio" data-preset-size="12x18" data-preset-moulding="teak" data-wall-tag="Set of 3 · 12×18&quot; Warm Teak">
+<img src="/v2/walls/indian-bedroom-trio-teak.jpg" alt="Indian master bedroom wall above carved sheesham headboard with 3 Warm Teak couple frames" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 3 · 12×18" Warm Teak</span>
+</button>
+<button type="button" class="customer-wall-shot tall" data-preset-pack="single" data-preset-size="16x24" data-preset-moulding="walnut" data-wall-tag="Statement 16×24&quot; Dark Walnut">
+<img src="/v2/walls/indian-parents-16x24-walnut.jpg" alt="Indian hallway console with brass diya, money plant and 16x24 Dark Walnut parents anniversary portrait frame" loading="lazy" width="260" height="240">
+<span class="wall-shot-pill">16×24" Dark Walnut</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="gallery6" data-preset-size="8x12" data-preset-moulding="white" data-wall-tag="Set of 6 · 8×12&quot; Gallery White">
+<img src="/v2/walls/indian-study-diwan-6-white.jpg" alt="Indian study and diwan room wall with Hindi calendar and 6 Gallery White family frames" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 6 · Gallery White</span>
+</button>
+<button type="button" class="customer-wall-shot tall" data-preset-pack="gallery6" data-preset-size="12x18" data-preset-moulding="teak" data-wall-tag="Set of 6 · 12×18&quot; Warm Teak">
+<img src="/v2/walls/indian-hallway-6-teak.jpg" alt="Indian marble-floored corridor wall with 6 Warm Teak joint family milestone frames" loading="lazy" width="260" height="240">
+<span class="wall-shot-pill">Set of 6 · 12×18" Teak</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="trio" data-preset-size="8x12" data-preset-moulding="gold" data-wall-tag="Set of 3 · 8×12&quot; Royal Gold">
+<img src="/v2/walls/indian-festive-trio-gold.jpg" alt="Indian living room showcase cabinet with brass diyas and 3 Royal Gold wedding &amp; family frames" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 3 · Royal Gold</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="gallery6" data-preset-size="8x12" data-preset-moulding="black" data-wall-tag="Set of 6 · 8×12&quot; Matte Black" aria-hidden="true" tabindex="-1">
+<img src="/v2/walls/indian-living-sofa-6-black.jpg" alt="" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 6 · 8×12" Matte Black</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="trio" data-preset-size="12x18" data-preset-moulding="teak" data-wall-tag="Set of 3 · 12×18&quot; Warm Teak" aria-hidden="true" tabindex="-1">
+<img src="/v2/walls/indian-bedroom-trio-teak.jpg" alt="" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 3 · 12×18" Warm Teak</span>
+</button>
+<button type="button" class="customer-wall-shot tall" data-preset-pack="single" data-preset-size="16x24" data-preset-moulding="walnut" data-wall-tag="Statement 16×24&quot; Dark Walnut" aria-hidden="true" tabindex="-1">
+<img src="/v2/walls/indian-parents-16x24-walnut.jpg" alt="" loading="lazy" width="260" height="240">
+<span class="wall-shot-pill">16×24" Dark Walnut</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="gallery6" data-preset-size="8x12" data-preset-moulding="white" data-wall-tag="Set of 6 · 8×12&quot; Gallery White" aria-hidden="true" tabindex="-1">
+<img src="/v2/walls/indian-study-diwan-6-white.jpg" alt="" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 6 · Gallery White</span>
+</button>
+<button type="button" class="customer-wall-shot tall" data-preset-pack="gallery6" data-preset-size="12x18" data-preset-moulding="teak" data-wall-tag="Set of 6 · 12×18&quot; Warm Teak" aria-hidden="true" tabindex="-1">
+<img src="/v2/walls/indian-hallway-6-teak.jpg" alt="" loading="lazy" width="260" height="240">
+<span class="wall-shot-pill">Set of 6 · 12×18" Teak</span>
+</button>
+<button type="button" class="customer-wall-shot" data-preset-pack="trio" data-preset-size="8x12" data-preset-moulding="gold" data-wall-tag="Set of 3 · 8×12&quot; Royal Gold" aria-hidden="true" tabindex="-1">
+<img src="/v2/walls/indian-festive-trio-gold.jpg" alt="" loading="lazy" width="320" height="240">
+<span class="wall-shot-pill">Set of 3 · Royal Gold</span>
+</button>
+</div>
+</div>
+<div class="walls-masonry-grid" id="wallsMasonryGrid" hidden>
+</div>
+<div class="ugc-share-bar">
+<span>📸 Built your wall? Send a photo of your framed wall on WhatsApp &amp; get <strong>₹100 Instant Cashback</strong></span>
+<button type="button" class="ugc-wa-btn" id="shareMyWallBtn">Share Your Wall Photo →</button>
+</div>
+</section>
+<section class="bento-strip" aria-label="Frame Engineering and USPs">
+<div class="bento-container">
+<div class="usp-section-header">
+<span class="walls-eyebrow">ENGINEERED FOR DECADES</span>
+<h2>Built Like Archival Hardware. Not Ordinary Frames.</h2>
+</div>
+<div class="bento-grid">
+<article class="bento-card">
+<div class="bento-visual">
+<img src="/v2/usps/usp-exploded-layers.jpg" alt="4-Layer Exploded Frame Architecture: Solid Profile Moulding, 2mm Cast Optical Acrylic, Silver-Halide Lab Print with Museum Mat, and Moisture-Sealed MDF Core" loading="lazy" width="640" height="360">
+</div>
+<div class="bento-copy">
+<span class="bento-tag">01 · 4-LAYER ARCHITECTURE</span>
+<h3>Precision Mitered Frame + Moisture-Sealed Core</h3>
+<p>Every frame locks a bevel-cut museum mat and lab print between 2mm cast optical acrylic and a warp-proof MDF backing board.</p>
+</div>
+</article>
+<article class="bento-card bento-card-dark">
+<div class="bento-visual">
+<img src="/v2/usps/usp-silver-halide-lab.jpg" alt="50x Macro Comparison: Continuous-tone Silver-Halide Chemical Lab Print vs Ordinary CMYK Inkjet Dots" loading="lazy" width="640" height="360">
+</div>
+<div class="bento-copy">
+<span class="bento-tag">02 · WET-CHEMICAL SILVER HALIDE</span>
+<h3>Zero Inkjet Dots. 100-Year Archival Skin Tones.</h3>
+<p>Developed chemically on light-sensitive silver-halide paper in our photo lab—continuous tone that never fades or peels in Indian humidity.</p>
+</div>
+</article>
+<article class="bento-card">
+<div class="bento-visual">
+<img src="/v2/usps/usp-optical-acrylic.jpg" alt="2mm Optical Cast Acrylic impact resistance and 99% optical clarity test" loading="lazy" width="640" height="360">
+</div>
+<div class="bento-copy">
+<span class="bento-tag">03 · 2MM OPTICAL CAST ACRYLIC</span>
+<h3>99% Glass Clarity. 10× Impact Resistant.</h3>
+<p>Half the weight of brittle float glass and virtually unbreakable—safe for children's bedrooms and long-distance courier transit.</p>
+</div>
+</article>
+<article class="bento-card">
+<div class="bento-visual">
+<img src="/v2/usps/usp-mount-dropshield.jpg" alt="No-Nail 60-Second Wall Mount Strips and 6-Layer EPE Foam Drop-Shield Packaging" loading="lazy" width="640" height="360">
+</div>
+<div class="bento-copy">
+<span class="bento-tag">04 · NO-NAIL MOUNT + 6-LAYER ARMOR</span>
+<h3>Hang in 60 Seconds. 24-Hr Free Damage Replacement.</h3>
+<p>Includes both steel sawtooth hangers and peel-and-stick 3M wall strips, shipped inside custom EPE foam corner bumpers.</p>
+</div>
+</article>
+</div>
+<div class="compact-faq">
+<details>
+<summary>How fast is delivery and how does Partial COD work?</summary>
+<p>Dispatched in 24–36 hours via Delhivery and Blue Dart (2–4 days to Bihar, UP, NCR, WB &amp; Jharkhand; 4–6 days pan-India). Pay <strong>100% Prepaid to save ₹100</strong>, or choose <strong>Partial COD</strong> (pay ₹149 via UPI now to start printing, and pay the rest on delivery).</p>
+</details>
+<details>
+<summary>Will phone or WhatsApp photos print sharply?</summary>
+<p>Yes. Our uploader checks your DPI live, and our studio technician manually adjusts brightness and sharpness before printing.</p>
+</details>
+</div>
+</div>
+</section>
+<footer class="sleek-footer">
+<div class="bento-container footer-flex">
+<div>
+<strong>DARPAN PHOTO LAB &amp; FRAMING STUDIO</strong>
+<p>Station Road, Post Office Chowk, Gopalganj, Bihar – 841428 · <span id="footerPhoneDisplay">+91 94310 00000</span></p>
+</div>
+<div class="footer-policy-links">
+<button type="button" class="policy-link" data-policy="refund">Refund &amp; 24-Hr Replacement</button>
+<button type="button" class="policy-link" data-policy="shipping">Shipping</button>
+<button type="button" class="policy-link" data-policy="privacy">Privacy</button>
+<button type="button" class="policy-link" data-policy="terms">Terms</button>
+<button type="button" class="policy-link" data-policy="contact">Contact</button>
+</div>
+</div>
+</footer>
+<dialog id="checkoutDialog" class="modern-dialog" closedby="any" aria-labelledby="checkoutDialogTitle">
+<div class="dialog-shell">
+<div class="dialog-top">
+<h2 id="checkoutDialogTitle">Bag &amp; Fast Checkout (<span id="cartItemCountLabel">0</span>)</h2>
+<button type="button" class="close-x" data-close-dialog="checkoutDialog" aria-label="Close">✕</button>
+</div>
+<div class="dialog-content checkout-split">
+<div class="summary-col">
+<div id="cartItemsContainer" class="bag-list"></div>
+<div class="addons-strip">
+<label class="addon-check">
+<input type="checkbox" id="addonGiftWrap">
+<span>🎁 Gift wrap + printed note (+₹99)</span>
+</label>
+<label class="addon-check">
+<input type="checkbox" id="addonExtraStrips">
+<span>🧲 Extra 8-pack 3M wall strips (+₹69)</span>
+</label>
+</div>
+<dl class="totals-box">
+<div class="t-row">
+<dt>Subtotal</dt>
+<dd id="billSubtotal">₹0</dd>
+</div>
+<div class="t-row">
+<dt>6-Layer Protective Shipping</dt>
+<dd id="billShipping">FREE</dd>
+</div>
+<div class="t-row save-row" id="billDiscountRow">
+<dt>100% Prepaid Discount</dt>
+<dd id="billDiscount">-₹100</dd>
+</div>
+<div class="t-row" id="billCodFeeRow" hidden>
+<dt>COD Collection Fee</dt>
+<dd>+₹49</dd>
+</div>
+<div class="t-row grand-row">
+<dt>Total</dt>
+<dd id="billGrandTotal">₹0</dd>
+</div>
+<div class="t-row partial-row" id="partialCodBreakdown" hidden>
+<dt>Pay Now via UPI</dt>
+<dd><strong id="billPayNowAmount">₹149</strong> (Rest <span id="billPayOnDeliveryAmount">₹0</span> on delivery)</dd>
+</div>
+</dl>
+</div>
+<div class="form-col">
+<form id="checkoutForm" novalidate>
+<div class="field-group">
+<label for="customerName">Full Name *</label>
+<span id="name-hint" class="field-hint">Recipient's full name</span>
+<input
+type="text"
+id="customerName"
+name="name"
+autocomplete="name"
+required
+minlength="2"
+aria-describedby="name-hint"
+aria-errormessage="name-error"
+>
+<div id="name-error" class="error-msg">❌ Enter your full name.</div>
+</div>
+<div class="field-grid-2">
+<div class="field-group">
+<label for="customerPhone">WhatsApp / Mobile *</label>
+<span id="phone-hint" class="field-hint">10-digit Indian mobile number</span>
+<input
+type="tel"
+id="customerPhone"
+name="phone"
+autocomplete="tel"
+inputmode="tel"
+pattern="(\+91[\-\s]?)?[0]?[6-9][0-9]{9}"
+required
+aria-describedby="phone-hint"
+aria-errormessage="phone-error"
+>
+<div id="phone-error" class="error-msg">❌ Enter a valid 10-digit mobile number.</div>
+</div>
+<div class="field-group">
+<label for="customerEmail">Email <span class="opt-tag">(Optional)</span></label>
+<span id="email-hint" class="field-hint">Format: you@example.com</span>
+<input
+type="email"
+id="customerEmail"
+name="email"
+autocomplete="email"
+aria-describedby="email-hint"
+aria-errormessage="email-error"
+>
+<div id="email-error" class="error-msg">❌ Enter a valid email or leave blank.</div>
+</div>
+</div>
+<div class="field-grid-3">
+<div class="field-group">
+<label for="customerPincode">PIN Code *</label>
+<span id="pin-hint" class="field-hint">6 digits (auto-fills city)</span>
+<input
+type="text"
+id="customerPincode"
+name="postal-code"
+autocomplete="postal-code"
+inputmode="numeric"
+pattern="[1-8][0-9]{5}"
+maxlength="6"
+required
+aria-describedby="pin-hint"
+aria-errormessage="pin-error"
+>
+<div id="pin-error" class="error-msg">❌ Valid 6-digit PIN required.</div>
+</div>
+<div class="field-group">
+<label for="customerCity">City *</label>
+<span id="city-hint" class="field-hint">Auto-filled from PIN</span>
+<input
+type="text"
+id="customerCity"
+name="city"
+autocomplete="address-level2"
+required
+aria-describedby="city-hint"
+aria-errormessage="city-error"
+>
+<div id="city-error" class="error-msg">❌ Enter city.</div>
+</div>
+<div class="field-group">
+<label for="customerState">State *</label>
+<span id="state-hint" class="field-hint">State / UT</span>
+<select id="customerState" name="state" autocomplete="address-level1" required aria-describedby="state-hint">
+<option value="Bihar">Bihar</option>
+<option value="Uttar Pradesh">Uttar Pradesh</option>
+<option value="Delhi">Delhi</option>
+<option value="Jharkhand">Jharkhand</option>
+<option value="West Bengal">West Bengal</option>
+<option value="Madhya Pradesh">Madhya Pradesh</option>
+<option value="Rajasthan">Rajasthan</option>
+<option value="Maharashtra">Maharashtra</option>
+<option value="Karnataka">Karnataka</option>
+<option value="Haryana">Haryana</option>
+<option value="Punjab">Punjab</option>
+<option value="Gujarat">Gujarat</option>
+<option value="Tamil Nadu">Tamil Nadu</option>
+<option value="Telangana">Telangana</option>
+<option value="Odisha">Odisha</option>
+<option value="Assam">Assam</option>
+<option value="Chhattisgarh">Chhattisgarh</option>
+<option value="Uttarakhand">Uttarakhand</option>
+<option value="Other State">Other State</option>
+</select>
+</div>
+</div>
+<div class="eta-banner" id="pincodeServiceStatus" hidden></div>
+<div class="field-group">
+<label for="customerAddress">Street Address &amp; Landmark *</label>
+<span id="address-hint" class="field-hint">House/Flat No., Street, and Landmark</span>
+<textarea
+id="customerAddress"
+name="address"
+autocomplete="street-address"
+rows="2"
+required
+minlength="8"
+aria-describedby="address-hint"
+aria-errormessage="address-error"
+></textarea>
+<div id="address-error" class="error-msg">❌ Enter complete street address and landmark.</div>
+</div>
+<fieldset class="pay-mode-group">
+<legend>Payment Mode</legend>
+<label class="pay-option active">
+<input type="radio" name="paymentMode" value="prepaid" checked>
+<div>
+<strong>100% Prepaid (UPI / Cards) — Save ₹149</strong>
+<small>₹100 instant off + ₹0 COD fee</small>
+</div>
+</label>
+<label class="pay-option">
+<input type="radio" name="paymentMode" value="partial_cod">
+<div>
+<strong>Partial COD — Pay ₹149 Now, Rest on Delivery</strong>
+<small>Confirms custom photo printing (+₹49 courier COD fee)</small>
+</div>
+</label>
+</fieldset>
+<button type="submit" class="btn-submit-order" id="submitOrderBtn">
+Proceed to Payment &amp; Confirm Order →
+</button>
+</form>
+</div>
+</div>
+</div>
+</dialog>
+<dialog id="paymentGatewayDialog" class="modern-dialog" closedby="any" aria-labelledby="pgDialogTitle" style="max-width:420px;">
+<div class="dialog-shell">
+<div class="dialog-top">
+<h2 id="pgDialogTitle">🔒 Instant UPI / Card Payment</h2>
+<button type="button" class="close-x" data-close-dialog="paymentGatewayDialog" aria-label="Cancel">✕</button>
+</div>
+<div class="dialog-content" style="text-align:center;">
+<div class="pg-amount-card">
+<small id="pgOrderSubtitle">Order Verification</small>
+<strong id="pgAmountDisplay">₹1,299</strong>
+<span id="pgModeNote">100% Prepaid · ₹100 Discount Applied</span>
+</div>
+<div class="field-group" style="text-align:left;">
+<label for="upiVpaInput">UPI ID or Payment App</label>
+<input type="text" id="upiVpaInput" value="customer@okicici" placeholder="yourname@upi">
+</div>
+<button type="button" class="btn-submit-order" id="confirmPaymentSuccessBtn" style="background:#15803d;">
+✓ Authorize Payment Now
+</button>
+</div>
+</div>
+</dialog>
+<dialog id="policyDialog" class="modern-dialog" closedby="any" aria-labelledby="policyDialogTitle" style="max-width:640px;">
+<div class="dialog-shell">
+<div class="dialog-top">
+<h2 id="policyDialogTitle">Policy</h2>
+<button type="button" class="close-x" data-close-dialog="policyDialog" aria-label="Close">✕</button>
+</div>
+<div class="dialog-content" id="policyDialogContent" style="font-size:0.88rem; line-height:1.65;"></div>
+</div>
+</dialog>
+<div id="toastContainer" class="toast-stack" aria-live="polite"></div>
+<script src="/v2/app.js" defer></script>
+</body>
+</html>

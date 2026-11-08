@@ -1,0 +1,12 @@
+{
+  "name": "darpan-archival-framing-studio",
+  "version": "1.0.0",
+  "description": "Production D2C Custom Photo Framing & Silver-Halide Archival Print Storefront (Printo + Framekro Customizer Engine)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
