@@ -9,7 +9,7 @@ const UPLOADS_DIR = path.join(__dirname, 'uploads');
 
 // Studio configuration (override via environment variables in production)
 const ADMIN_PIN = process.env.ADMIN_PIN || '841428';
-const STUDIO_WHATSAPP = process.env.STUDIO_WHATSAPP || '919431000000';
+const STUDIO_WHATSAPP = process.env.STUDIO_WHATSAPP || '918106511911';
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
 
 if (!fs.existsSync(UPLOADS_DIR)) {

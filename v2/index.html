@@ -13,7 +13,7 @@
 <body>
 <header class="topbar">
 <div class="topbar-inner">
-<a href="/v2" class="logo" aria-label="Darpan Home">
+<a href="/" class="logo" aria-label="Darpan Home">
 <span class="logo-dot" aria-hidden="true"></span>
 <span class="logo-word">DARPAN</span>
 <span class="logo-tag">STUDIO</span>
@@ -21,13 +21,12 @@
 <div class="topbar-pill">
 <span>Free Delivery ₹999+</span>
 <span class="sep" aria-hidden="true">·</span>
-<span>₹100 OFF Prepaid</span>
+<span>₹100 OFF Orders ₹999+</span>
 <span class="sep" aria-hidden="true">·</span>
 <span>24-Hr Damage Replacement</span>
 </div>
 <div class="topbar-actions">
 <a href="#happy-customers" class="version-switch">Walls Built</a>
-<a href="/" class="version-switch" title="Switch to Classic Storefront (v1)">Classic v1</a>
 <button type="button" class="cart-trigger" id="openCartBtn" aria-label="Open bag">
 <span>Bag</span>
 <span class="cart-badge" id="cartCountBadge">0</span>
@@ -66,9 +65,10 @@ height="320"
 </div>
 </div>
 </div>
-<div class="scale-bench" aria-hidden="true">
+<div class="scale-bench" id="scaleBench" aria-hidden="true">
 <div class="scale-line">
-<span>5 ft Sofa Scale Reference</span>
+<div class="scale-span-fill" id="sofaSpanFill"></div>
+<span id="sofaScaleLabel">5 ft (60") Sofa Scale Reference</span>
 </div>
 </div>
 </div>
@@ -231,7 +231,7 @@ height="320"
 <s class="dock-compare" id="liveComparePrice">₹2,097</s>
 <span class="dock-save" id="liveSavingsBadge">Save ₹698</span>
 </div>
-<span class="dock-sub" id="liveShippingNote">Free Delivery · Extra ₹100 off on Prepaid</span>
+<span class="dock-sub" id="liveShippingNote">Free Delivery · Extra ₹100 off on Orders ₹999+</span>
 </div>
 <div class="dock-cta-group">
 <button type="button" class="btn-buy" id="addToCartBtn">Add to Bag</button>
@@ -363,8 +363,8 @@ height="320"
 </div>
 <div class="compact-faq">
 <details>
-<summary>How fast is delivery and how does Partial COD work?</summary>
-<p>Dispatched in 24–36 hours via Delhivery and Blue Dart (2–4 days to Bihar, UP, NCR, WB &amp; Jharkhand; 4–6 days pan-India). Pay <strong>100% Prepaid to save ₹100</strong>, or choose <strong>Partial COD</strong> (pay ₹149 via UPI now to start printing, and pay the rest on delivery).</p>
+<summary>How fast is delivery across India?</summary>
+<p>Dispatched in 24–36 hours from our Gopalganj lab via Delhivery and Blue Dart (2–4 days to Bihar, UP, NCR, WB &amp; Jharkhand; 4–6 days pan-India). Every order ships in 6-layer protective packaging with a 24-hour free replacement guarantee.</p>
 </details>
 <details>
 <summary>Will phone or WhatsApp photos print sharply?</summary>
@@ -377,7 +377,7 @@ height="320"
 <div class="bento-container footer-flex">
 <div>
 <strong>DARPAN COLOR LAB</strong>
-<p>Jangaliya More, Main Road, Gopalganj, Bihar – 841428 · <span id="footerPhoneDisplay">+91 94310 00000</span></p>
+<p>Jangaliya More, Main Road, Gopalganj, Bihar – 841428 · <span id="footerPhoneDisplay">+91 81065 11911</span></p>
 </div>
 <div class="footer-policy-links">
 <button type="button" class="policy-link" data-policy="refund">Refund &amp; 24-Hr Replacement</button>
@@ -417,20 +417,12 @@ height="320"
 <dd id="billShipping">FREE</dd>
 </div>
 <div class="t-row save-row" id="billDiscountRow">
-<dt>100% Prepaid Discount</dt>
+<dt>Online Order Discount</dt>
 <dd id="billDiscount">-₹100</dd>
-</div>
-<div class="t-row" id="billCodFeeRow" hidden>
-<dt>COD Collection Fee</dt>
-<dd>+₹49</dd>
 </div>
 <div class="t-row grand-row">
 <dt>Total</dt>
 <dd id="billGrandTotal">₹0</dd>
-</div>
-<div class="t-row partial-row" id="partialCodBreakdown" hidden>
-<dt>Pay Now via UPI</dt>
-<dd><strong id="billPayNowAmount">₹149</strong> (Rest <span id="billPayOnDeliveryAmount">₹0</span> on delivery)</dd>
 </div>
 </dl>
 </div>
@@ -556,23 +548,14 @@ aria-errormessage="address-error"
 ></textarea>
 <div id="address-error" class="error-msg">❌ Enter complete street address and landmark.</div>
 </div>
-<fieldset class="pay-mode-group">
-<legend>Payment Mode</legend>
-<label class="pay-option active">
-<input type="radio" name="paymentMode" value="prepaid" checked>
+<div class="pay-mode-group">
+<div class="pay-option active">
 <div>
-<strong>100% Prepaid (UPI / Cards) — Save ₹149</strong>
-<small>₹100 instant off + ₹0 COD fee</small>
+<strong>🔒 Online Payment (UPI / Cards / NetBanking)</strong>
+<small>Instant ₹100 discount applied on orders ₹999+ · Free 24-Hr Damage Replacement</small>
 </div>
-</label>
-<label class="pay-option">
-<input type="radio" name="paymentMode" value="partial_cod">
-<div>
-<strong>Partial COD — Pay ₹149 Now, Rest on Delivery</strong>
-<small>Confirms custom photo printing (+₹49 courier COD fee)</small>
 </div>
-</label>
-</fieldset>
+</div>
 <button type="submit" class="btn-submit-order" id="submitOrderBtn">
 Proceed to Payment &amp; Confirm Order →
 </button>
@@ -591,7 +574,7 @@ Proceed to Payment &amp; Confirm Order →
 <div class="pg-amount-card">
 <small id="pgOrderSubtitle">Order Verification</small>
 <strong id="pgAmountDisplay">₹1,299</strong>
-<span id="pgModeNote">100% Prepaid · ₹100 Discount Applied</span>
+<span id="pgModeNote">Secure Online Payment · ₹100 Discount Applied</span>
 </div>
 <div class="field-group" style="text-align:left;">
 <label for="upiVpaInput">UPI ID or Payment App</label>

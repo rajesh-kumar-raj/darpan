@@ -6,7 +6,7 @@
 (() => {
   'use strict';
 
-  let STUDIO_WHATSAPP_NUMBER = '919431000000';
+  let STUDIO_WHATSAPP_NUMBER = '918106511911';
   let RAZORPAY_KEY_ID = '';
 
   const DEFAULT_SAMPLE_PHOTOS = [
@@ -292,6 +292,28 @@
     stage.setAttribute('data-pack-layout', state.pack);
     stage.setAttribute('data-size-scale', state.size);
 
+    const canvasCenter = stage.closest('.canvas-center');
+    if (canvasCenter) {
+      canvasCenter.setAttribute('data-pack-layout', state.pack);
+      canvasCenter.setAttribute('data-size-scale', state.size);
+    }
+
+    const cols = state.pack === 'trio' || state.pack === 'gallery6' ? 3 : 1;
+    const singleOuterIn =
+      (state.orientation === 'landscape' ? state.heightIn : state.widthIn) +
+      (state.mountStyle === 'fullbleed' ? 1.0 : 1.5);
+    const wallSpanIn = Math.round(singleOuterIn * cols + (cols > 1 ? (cols - 1) * 2 : 0));
+    const spanPct = Math.min(100, Math.max(15, Math.round((wallSpanIn / 60) * 100)));
+    const spanFill = document.getElementById('sofaSpanFill');
+    const scaleLabel = document.getElementById('sofaScaleLabel');
+    if (spanFill) spanFill.style.setProperty('--span-pct', `${spanPct}%`);
+    if (scaleLabel) {
+      scaleLabel.textContent =
+        cols === 1
+          ? `5 ft (60") Sofa Scale Reference · Frame Width: ~${wallSpanIn}" (${spanPct}% of sofa)`
+          : `5 ft (60") Sofa Scale Reference · Wall Span: ~${wallSpanIn}" (${spanPct}% of sofa)`;
+    }
+
     const isCaption = state.mountStyle === 'polaroid';
 
     stage.innerHTML = Array.from({ length: state.slotCount }, (_, idx) => {
@@ -412,7 +434,7 @@
     if (shipNote) {
       shipNote.textContent = isLowAov
         ? '+₹99 Shipping (Orders ₹999+ ship free)'
-        : 'Free Delivery · Extra ₹100 off on Prepaid';
+        : 'Free Delivery · Extra ₹100 off on Orders ₹999+';
     }
   };
 
@@ -704,11 +726,11 @@
     const strips = document.getElementById('addonExtraStrips')?.checked ? 69 : 0;
     const subtotal = itemsSubtotal + gift + strips;
     const shipping = subtotal > 0 && subtotal < 999 ? 99 : 0;
-    const discount = subtotal >= 999 && paymentMode === 'prepaid' ? 100 : 0;
-    const codFee = paymentMode === 'partial_cod' && subtotal > 0 ? 49 : 0;
-    const grandTotal = Math.max(0, subtotal + shipping - discount + codFee);
-    const payNow = paymentMode === 'partial_cod' ? Math.min(149, grandTotal) : grandTotal;
-    const payOnDelivery = paymentMode === 'partial_cod' ? Math.max(0, grandTotal - payNow) : 0;
+    const discount = subtotal >= 999 ? 100 : 0;
+    const codFee = 0;
+    const grandTotal = Math.max(0, subtotal + shipping - discount);
+    const payNow = grandTotal;
+    const payOnDelivery = 0;
 
     return { subtotal, shipping, discount, codFee, grandTotal, payNow, payOnDelivery };
   };
@@ -752,18 +774,11 @@
     document.getElementById('billShipping').textContent = bill.shipping === 0 ? 'FREE' : `₹${bill.shipping}`;
     document.getElementById('billDiscountRow').hidden = bill.discount === 0;
     document.getElementById('billDiscount').textContent = `-₹${bill.discount}`;
-    document.getElementById('billCodFeeRow').hidden = bill.codFee === 0;
     document.getElementById('billGrandTotal').textContent = `₹${bill.grandTotal.toLocaleString('en-IN')}`;
-    document.getElementById('partialCodBreakdown').hidden = paymentMode !== 'partial_cod' || bill.grandTotal === 0;
-    document.getElementById('billPayNowAmount').textContent = `₹${bill.payNow}`;
-    document.getElementById('billPayOnDeliveryAmount').textContent = `₹${bill.payOnDelivery.toLocaleString('en-IN')}`;
 
     const submitBtn = document.getElementById('submitOrderBtn');
     if (submitBtn) {
-      submitBtn.textContent =
-        paymentMode === 'partial_cod'
-          ? `Pay ₹${bill.payNow} UPI Advance (Rest ₹${bill.payOnDelivery} on Delivery) →`
-          : `Pay ₹${bill.grandTotal.toLocaleString('en-IN')} & Confirm Order →`;
+      submitBtn.textContent = `Pay ₹${bill.grandTotal.toLocaleString('en-IN')} & Confirm Order →`;
     }
   };
 
@@ -848,11 +863,11 @@
     },
     terms: {
       title: 'Terms & Conditions',
-      html: `<p>Custom photo frames are made-to-order personalized items. For Partial COD orders, the ₹149 advance confirms printing and the balance is payable upon delivery.</p>`
+      html: `<p>Custom photo frames are made-to-order personalized items handcrafted to your selected size, moulding, and photo crop. Every order includes our 24-hour free replacement guarantee against transit damage.</p>`
     },
     contact: {
       title: 'Contact & Studio Address',
-      html: `<p><strong>Darpan Color Lab</strong><br>Jangaliya More, Main Road, Gopalganj, Bihar – 841428<br>WhatsApp / Support: +91 94310 00000 · support@darpanframes.in</p>`
+      html: `<p><strong>Darpan Color Lab</strong><br>Jangaliya More, Main Road, Gopalganj, Bihar – 841428<br>WhatsApp / Support: +91 81065 11911 · support@darpanframes.in</p>`
     }
   };
 
@@ -958,9 +973,7 @@
         document.getElementById('pgOrderSubtitle').textContent = `Order ${pendingOrderDraft.orderId}`;
         document.getElementById('pgAmountDisplay').textContent = `₹${bill.payNow.toLocaleString('en-IN')}`;
         document.getElementById('pgModeNote').textContent =
-          paymentMode === 'partial_cod'
-            ? `Partial COD Advance (Balance ₹${bill.payOnDelivery} on delivery)`
-            : '100% Prepaid · ₹100 Discount Applied';
+          bill.discount > 0 ? 'Secure Online Payment · ₹100 Discount Applied' : 'Secure Online Payment';
         pgDialog?.showModal();
       });
     }
