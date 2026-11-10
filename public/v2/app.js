@@ -52,8 +52,48 @@
   // 1. MODERN WEB GUIDANCE MANDATORY FALLBACKS
   // =========================================================================
 
+  let supportsDisplayTransition;
+  const canTransitionDisplay = () => {
+    if (supportsDisplayTransition !== undefined) return supportsDisplayTransition;
+    if (!window.CSS?.supports?.('transition-behavior', 'allow-discrete') || !document.body) {
+      return false;
+    }
+    const probe = document.createElement('div');
+    probe.style.cssText = 'transition: display 1s allow-discrete !important; display: block;';
+    document.body.appendChild(probe);
+    getComputedStyle(probe).display;
+    probe.style.display = 'none';
+    supportsDisplayTransition = getComputedStyle(probe).display === 'block';
+    probe.remove();
+    return supportsDisplayTransition;
+  };
+
+  const supportsTopLayerExit = () =>
+    window.CSS?.supports?.('overlay', 'auto') && canTransitionDisplay();
+
+  const closeTopLayer = async (element) => {
+    if (!element || !element.open) return;
+    if (!supportsTopLayerExit()) {
+      element.setAttribute('data-closing', '');
+      const animations = element.getAnimations({ subtree: true });
+      if (animations.length > 0) {
+        await Promise.race([
+          Promise.allSettled(animations.map((a) => a.finished)),
+          new Promise((r) => setTimeout(r, 2000))
+        ]);
+      }
+      if (!element.hasAttribute('data-closing')) return;
+      element.removeAttribute('data-closing');
+    }
+    element.close();
+  };
+
   const initDialogLightDismissFallback = () => {
     document.querySelectorAll('dialog[closedby="any"]').forEach((dialog) => {
+      dialog.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        closeTopLayer(dialog);
+      });
       if (!('closedBy' in HTMLDialogElement.prototype)) {
         dialog.addEventListener('click', (event) => {
           if (event.target !== dialog) return;
@@ -64,7 +104,7 @@
             rect.left <= event.clientX &&
             event.clientX <= rect.left + rect.width;
           if (isDialogContent) return;
-          dialog.close();
+          closeTopLayer(dialog);
         });
       }
     });
@@ -72,7 +112,7 @@
     document.querySelectorAll('[data-close-dialog]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const dlg = document.getElementById(btn.getAttribute('data-close-dialog'));
-        if (dlg && dlg.open) dlg.close();
+        if (dlg && dlg.open) closeTopLayer(dlg);
       });
     });
   };
@@ -271,6 +311,7 @@
       return `
         <button type="button" class="dock-slot ${isActive ? 'active' : ''}" data-slot-idx="${idx}" title="Select Frame #${idx + 1}">
           <img src="${slot.url}" alt="Slot ${idx + 1}">
+          ${slot.isCustomerUpload ? '<span class="dock-slot-check" aria-hidden="true">✓</span>' : ''}
           <span class="dock-slot-num">#${idx + 1}</span>
         </button>
       `;

@@ -13,31 +13,40 @@
 <body>
 <header class="topbar">
 <div class="topbar-inner">
-<a href="/" class="logo" aria-label="Darpan Home">
+<a href="/" class="logo" aria-label="Darpan Color Lab Home">
 <span class="logo-dot" aria-hidden="true"></span>
 <span class="logo-word">DARPAN</span>
-<span class="logo-tag">STUDIO</span>
+<span class="logo-tag">COLOR LAB</span>
 </a>
-<div class="topbar-pill">
-<span>Free Delivery ₹999+</span>
+<div class="topbar-pill" aria-label="Studio Offers">
+<span>🚚 Free Delivery ₹999+</span>
 <span class="sep" aria-hidden="true">·</span>
-<span>₹100 OFF Orders ₹999+</span>
+<span>✨ ₹100 OFF Orders ₹999+</span>
 <span class="sep" aria-hidden="true">·</span>
-<span>24-Hr Damage Replacement</span>
+<span>🛡️ 24-Hr Damage Replacement</span>
 </div>
 <div class="topbar-actions">
-<a href="#happy-customers" class="version-switch">Walls Built</a>
-<button type="button" class="cart-trigger" id="openCartBtn" aria-label="Open bag">
+<a href="#happy-customers" class="version-switch">Customer Walls</a>
+<a href="#frame-engineering" class="version-switch hide-sm">Lab Quality</a>
+<button type="button" class="cart-trigger" id="openCartBtn" aria-label="Open shopping bag">
 <span>Bag</span>
 <span class="cart-badge" id="cartCountBadge">0</span>
 </button>
 </div>
 </div>
 </header>
+<div class="mobile-offer-bar" aria-label="Highlights">
+<span>🚚 Free Shipping ₹999+</span>
+<span aria-hidden="true">·</span>
+<span>✨ Flat ₹100 OFF ₹999+</span>
+<span aria-hidden="true">·</span>
+<span>🛡️ 24-Hr Replacement</span>
+</div>
 <main class="studio-shell">
 <section class="canvas-pane" id="roomStage" data-wall="alabaster" aria-label="Live Frame Preview">
 <div class="canvas-hud-top">
-<div class="hud-pill" role="radiogroup" aria-label="Wall tone">
+<div class="hud-pill" role="radiogroup" aria-label="Wall paint color">
+<span class="hud-label">Wall:</span>
 <button type="button" role="radio" aria-checked="true" class="wall-dot active" data-wall-color="alabaster" title="Gallery Alabaster" aria-label="Gallery Alabaster"></button>
 <button type="button" role="radio" aria-checked="false" class="wall-dot" data-wall-color="stone" title="Warm Stone" aria-label="Warm Stone"></button>
 <button type="button" role="radio" aria-checked="false" class="wall-dot" data-wall-color="sage" title="Muted Sage" aria-label="Muted Sage"></button>
@@ -45,10 +54,10 @@
 </div>
 <div class="hud-pill dpi-pill" id="dpiIndicator" role="status" aria-live="polite">
 <span class="status-dot good" id="dpiDot"></span>
-<span id="dpiText">285 DPI · Print Ready</span>
+<span id="dpiText">285 DPI · Sharp Print</span>
 </div>
 </div>
-<div class="canvas-center">
+<div class="canvas-center" data-pack-layout="trio" data-size-scale="8x12">
 <div class="gallery-wall" id="galleryWallStage" data-pack-layout="trio" data-size-scale="8x12">
 <div class="frame-node moulding-black mount-museum orient-portrait selected-slot" data-frame-slot="0">
 <div class="frame-mat">
@@ -68,14 +77,21 @@ height="320"
 <div class="scale-bench" id="scaleBench" aria-hidden="true">
 <div class="scale-line">
 <div class="scale-span-fill" id="sofaSpanFill"></div>
-<span id="sofaScaleLabel">5 ft (60") Sofa Scale Reference</span>
+<span id="sofaScaleLabel">5 ft (60") Sofa Scale Reference · Wall Span: ~29" (48% of sofa)</span>
+</div>
+<div class="sofa-silhouette">
+<span class="sofa-arm"></span>
+<span class="sofa-cushion"></span>
+<span class="sofa-cushion"></span>
+<span class="sofa-cushion"></span>
+<span class="sofa-arm"></span>
 </div>
 </div>
 </div>
 <div class="canvas-hud-bottom">
-<span id="stageSpecSummary">3 × (8" × 12") · Matte Black · Shatterproof Acrylic</span>
+<span id="stageSpecSummary">3 × (8" × 12") · Matte Black · 2mm Acrylic</span>
 <div class="sample-pills">
-<span>Samples:</span>
+<span>Try Demo:</span>
 <button type="button" class="sample-chip active" data-sample="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" data-w="2400" data-h="3200">Wedding</button>
 <button type="button" class="sample-chip" data-sample="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" data-w="2600" data-h="1800">Family</button>
 <button type="button" class="sample-chip" data-sample="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" data-w="2000" data-h="2500">Portrait</button>
@@ -85,8 +101,13 @@ height="320"
 <aside class="inspector-pane" aria-label="Frame Customization Controls">
 <div class="inspector-scroll">
 <div class="inspector-header">
-<h1>Custom Lab Frame</h1>
-<p>Real darkroom photo paper · 2mm optical acrylic · No-nail wall strips included.</p>
+<div class="rating-row">
+<span class="stars" aria-hidden="true">★★★★★</span>
+<span class="rating-text">4.9/5 · 1,400+ Indian Homes Framed</span>
+<span class="lab-badge">Silver-Halide Lab</span>
+</div>
+<h1>Custom Archival Photo Frames</h1>
+<p>Developed on real silver-halide photo paper · 2mm shatterproof optical acrylic · No-nail wall strips included.</p>
 </div>
 <div class="cfg-section cfg-section-upload">
 <div class="cfg-label-row">
@@ -115,10 +136,12 @@ height="320"
 <small>1 Frame</small>
 </button>
 <button type="button" role="radio" aria-checked="true" class="seg-btn active" data-pack="trio" data-slots="3">
+<span class="micro-pill">POPULAR</span>
 <strong>Set of 3</strong>
 <small>Save 33%</small>
 </button>
 <button type="button" role="radio" aria-checked="false" class="seg-btn" data-pack="gallery6" data-slots="6">
+<span class="micro-pill best-val">BEST VALUE</span>
 <strong>Set of 6</strong>
 <small>Save 45%</small>
 </button>
@@ -139,8 +162,9 @@ height="320"
 <span class="st-sub">Compact · ₹499</span>
 </button>
 <button type="button" role="radio" aria-checked="true" class="size-tile active" data-size="8x12" data-single-price="699" data-trio-price="1399" data-gallery6-price="1699" data-w-in="8" data-h-in="12" data-mount="Tabletop &amp; Wall Dual Mount">
+<span class="micro-pill">MOST PICKED</span>
 <span class="st-dim">8" × 12"</span>
-<span class="st-sub">A4 Popular · ₹699</span>
+<span class="st-sub">A4 Classic · ₹699</span>
 </button>
 <button type="button" role="radio" aria-checked="false" class="size-tile" data-size="12x18" data-single-price="1199" data-trio-price="2499" data-gallery6-price="3699" data-w-in="12" data-h-in="18" data-mount="Wall Hanger">
 <span class="st-dim">12" × 18"</span>
@@ -224,6 +248,10 @@ height="320"
 </details>
 </div>
 <div class="purchase-dock">
+<div class="bundle-nudge" id="aovUpsellAlert" hidden>
+<span>💡 Switch to <strong>Set of 3</strong> to save 33% + get <strong>Free Delivery &amp; ₹100 OFF</strong></span>
+<button type="button" class="nudge-btn" id="quickUpgradeTrioBtn">Upgrade →</button>
+</div>
 <div class="dock-main-row">
 <div class="dock-price-block">
 <div class="dock-price-line">
@@ -313,7 +341,7 @@ height="320"
 <button type="button" class="ugc-wa-btn" id="shareMyWallBtn">Share Your Wall Photo →</button>
 </div>
 </section>
-<section class="bento-strip" aria-label="Frame Engineering and USPs">
+<section id="frame-engineering" class="bento-strip" aria-label="Frame Engineering and USPs">
 <div class="bento-container">
 <div class="usp-section-header">
 <span class="walls-eyebrow">ENGINEERED FOR DECADES</span>
@@ -361,14 +389,22 @@ height="320"
 </div>
 </article>
 </div>
-<div class="compact-faq">
+<div class="compact-faq" role="region" aria-label="Frequently Asked Questions">
 <details>
 <summary>How fast is delivery across India?</summary>
 <p>Dispatched in 24–36 hours from our Gopalganj lab via Delhivery and Blue Dart (2–4 days to Bihar, UP, NCR, WB &amp; Jharkhand; 4–6 days pan-India). Every order ships in 6-layer protective packaging with a 24-hour free replacement guarantee.</p>
 </details>
 <details>
 <summary>Will phone or WhatsApp photos print sharply?</summary>
-<p>Yes. Our uploader checks your DPI live, and our studio technician manually adjusts brightness and sharpness before printing.</p>
+<p>Yes. Our uploader checks your DPI live, and our darkroom technician manually adjusts exposure, skin tones, and sharpness before developing on silver-halide paper.</p>
+</details>
+<details>
+<summary>Do I need to drill nails into my wall?</summary>
+<p>No drilling required for 6"×8", 8"×12", and 12"×18" frames—every frame includes heavy-duty peel-and-stick 3M wall strips alongside steel sawtooth hangers so you can hang your gallery wall in 60 seconds without damaging paint.</p>
+</details>
+<details>
+<summary>What if a frame arrives damaged in courier transit?</summary>
+<p>You are covered by our 24-Hour Free Replacement Guarantee. Simply send a photo of any transit damage on WhatsApp (+91 81065 11911) within 24 hours of delivery and we dispatch a brand-new replacement frame free of charge.</p>
 </details>
 </div>
 </div>
@@ -377,7 +413,7 @@ height="320"
 <div class="bento-container footer-flex">
 <div>
 <strong>DARPAN COLOR LAB</strong>
-<p>Jangaliya More, Main Road, Gopalganj, Bihar – 841428 · <span id="footerPhoneDisplay">+91 81065 11911</span></p>
+<p>Jangaliya More, Main Road, Gopalganj, Bihar – 841428 · <a href="https://wa.me/918106511911" target="_blank" rel="noopener" class="footer-wa-link" id="footerPhoneDisplay">+91 81065 11911</a></p>
 </div>
 <div class="footer-policy-links">
 <button type="button" class="policy-link" data-policy="refund">Refund &amp; 24-Hr Replacement</button>
